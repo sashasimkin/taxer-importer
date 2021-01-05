@@ -1,0 +1,5 @@
+click==7.1.2
+requests==2.24.0
+
+# Dev stuff
+pylint==2.6.0
