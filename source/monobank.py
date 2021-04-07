@@ -3,7 +3,7 @@ import re
 from decimal import Decimal, InvalidOperation
 from datetime import datetime
 
-from adaptor import Operation
+from source.adaptor import Operation
 
 
 class Monobank:
