@@ -3,7 +3,7 @@ import re
 from decimal import Decimal, InvalidOperation
 from datetime import datetime
 
-from .adaptor import Operation
+from adaptor import Operation
 
 
 class Monobank:
@@ -15,7 +15,7 @@ class Monobank:
         self._file = f
         self._csvfile = csv.reader(self._file)
 
-    def validate(self):
+    def validate(self, f):
         # ToDo:
         # 1. Extract IBAN _OR_ provide separately?
         # self._file.name
@@ -25,11 +25,11 @@ class Monobank:
 
     def process(self):
         acc_spec = next(self._csvfile)
-        account_from = re.findall(u'рахунком (.*) за', acc_spec[0])[0]
-        print(f'Processing {acc_spec[0]}\n(Account number: {account_from})')
+        account_from = re.findall("рахунком (.*) за", acc_spec[0])[0]
+        print(f"Processing {acc_spec[0]}\n(Account number: {account_from})")
 
         header = next(self._csvfile)
-        print(f'Skipping header {header}')
+        print(f"Skipping header {header}")
         # ToDo: Must figure if submission order is any necessary to taxer
         # Or we could save up some resources and not load the whole CSV
         # into memory for the purpose of reversing
@@ -45,10 +45,10 @@ class Monobank:
             # the downstream code deal with its validation
             # or fail miserably
             pass
-        
-        dt_raw = f'{line[0]} {line[1]}'
+
+        dt_raw = f"{line[0]} {line[1]}"
         return Operation(
-            datetime=datetime.strptime(dt_raw, '%d.%m.%Y %H:%M:%S'),
+            datetime=datetime.strptime(dt_raw, "%d.%m.%Y %H:%M:%S"),
             account_to=line[6],
             amount=Decimal(line[7]),
             target_amount=Decimal(line[8]),

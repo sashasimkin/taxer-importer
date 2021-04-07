@@ -22,29 +22,33 @@ logger = logging.Logger(name=__name__)
 
 
 @click.command()
-@click.argument('statement_file')
-@click.option('-e', '--email', help="Your account's email address")
-@click.option('-p', '--password', help="Your account's password")
-@click.option('--creds-file',
-              default='.taxer-credentials',
-              help="Path to file with credentials login:password")
+@click.argument("statement_file")
+@click.option("-e", "--email", help="Your account's email address")
+@click.option("-p", "--password", help="Your account's password")
+@click.option(
+    "--creds-file",
+    default=".taxer-credentials",
+    help="Path to file with credentials login:password",
+)
 def main(statement_file, creds_file, email=None, password=None):
     """
     Make your operations flow from bank to taxer.ua
     """
     credentials = {
-        'email': email, 'password': password,
+        "email": email,
+        "password": password,
     }
-    if not(all(credentials.values())):
-        with open(creds_file, 'r', encoding='utf-8') as f:
+    if not (all(credentials.values())):
+        with open(creds_file, "r", encoding="utf-8") as f:
             raw_creds = f.read().strip()
-            parsed_creds = raw_creds.split(':', 1)
+            parsed_creds = raw_creds.split(":", 1)
             credentials = {
-                'email': parsed_creds[0], 'password': parsed_creds[1],
+                "email": parsed_creds[0],
+                "password": parsed_creds[1],
             }
-    
-    assert credentials['email'], "Email must be passed either through CLI or file"
-    assert credentials['password'], "Password must be passed either through CLI or file"
+
+    assert credentials["email"], "Email must be passed either through CLI or file"
+    assert credentials["password"], "Password must be passed either through CLI or file"
 
     print(email, password, creds_file, credentials)
 
@@ -53,7 +57,7 @@ def main(statement_file, creds_file, email=None, password=None):
 
     taxer_api = taxer.api()
 
-    with open(statement_file, 'r', encoding='utf-8') as f:
+    with open(statement_file, "r", encoding="utf-8") as f:
         mono = Monobank(f)
         for account, op in mono.process():
             if op.amount > 0:
@@ -62,21 +66,23 @@ def main(statement_file, creds_file, email=None, password=None):
                     account,
                     op.datetime,
                 )
-                print(f'Taxer replied {result}')
+                print(f"Taxer replied {result}")
             elif op.amount < 0:
                 result = taxer_api.add_exchange(
-                    abs(op.amount), op.rate,
-                    account, op.account_to,
+                    abs(op.amount),
+                    op.rate,
+                    account,
+                    op.account_to,
                     op.datetime,
                 )
-                print(f'Taxer replied {result}')
+                print(f"Taxer replied {result}")
             else:
-                print('Allo vi sho ebobo, kakoy nol?!?!???')
+                print("Allo vi sho ebobo, kakoy nol?!?!???")
                 exit(127)
-            
+
             # Do not DUDOS taxer
             time.sleep(randint(1, 3))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
