@@ -15,7 +15,7 @@ class Monobank:
         self._file = f
         self._csvfile = csv.reader(self._file)
 
-    def validate(self):
+    def validate(self, f):
         # ToDo:
         # 1. Extract IBAN _OR_ provide separately?
         # self._file.name
