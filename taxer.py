@@ -101,13 +101,14 @@ class TaxerSession:
     def make_url(self, path):
         return f"{self.basename}/{path}"
 
-    def api(self):
-        return TaxerAPI(self)
+    def api(self, *args, **kwargs):
+        return TaxerAPI(self, *args, **kwargs)
 
 
 class TaxerAPI:
-    def __init__(self, session: TaxerSession):
+    def __init__(self, session: TaxerSession, dry_run=False):
         self.session = session
+        self.dry_run = dry_run
 
     @staticmethod
     def make_timestamp(time: datetime):
@@ -189,6 +190,9 @@ class TaxerAPI:
         }
 
         print(f"Will be sending payload {payload}")
+
+        if self.dry_run:
+            return {"dry_run": True}
 
         return self.session.request(
             "post",

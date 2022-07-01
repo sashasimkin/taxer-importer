@@ -25,12 +25,13 @@ logger = logging.Logger(name=__name__)
 @click.argument("statement_file")
 @click.option("-e", "--email", help="Your account's email address")
 @click.option("-p", "--password", help="Your account's password")
+@click.option("--dry-run", is_flag=True)
 @click.option(
     "--creds-file",
     default=".taxer-credentials",
     help="Path to file with credentials login:password",
 )
-def main(statement_file, creds_file, email=None, password=None):
+def main(statement_file, creds_file, dry_run, email=None, password=None):
     """
     Make your operations flow from bank to taxer.ua
     """
@@ -55,7 +56,7 @@ def main(statement_file, creds_file, email=None, password=None):
     taxer = TaxerSession(auth_data=credentials, init_session=False)
     taxer.init_session(credentials)
 
-    taxer_api = taxer.api()
+    taxer_api = taxer.api(dry_run=dry_run)
 
     with open(statement_file, "r", encoding="utf-8") as f:
         mono = Monobank(f)
