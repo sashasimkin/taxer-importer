@@ -185,8 +185,12 @@ class TaxerAPI:
         local_data.setdefault("comment", comment)
 
         payload = {
-            "userId": self.session._uid,
-            "operation": local_data,
+            "operations": [
+                {
+                    "userId": self.session._uid,
+                    "operation": local_data,
+                },
+            ],
         }
 
         print(f"Will be sending payload {payload}")
