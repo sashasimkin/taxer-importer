@@ -78,7 +78,7 @@ def main(statement_file, creds_file, dry_run, email=None, password=None):
                 )
                 print(f"Taxer replied {result}")
             else:
-                print("Allo vi sho ebobo, kakoy nol?!?!???")
+                print("Can't process operation with zero amount")
                 exit(127)
 
             # Do not DUDOS taxer

@@ -31,7 +31,7 @@ class TaxerSession:
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36",
         "content-type": "application/json",
         "origin": "https://taxer.ua",
-        "referer": "https://taxer.ua/ru/",
+        "referer": "https://taxer.ua/uk/",
         "accept-language": "en-US,en;q=0.9",
     }
     logger = None
@@ -83,7 +83,7 @@ class TaxerSession:
         )
 
         if params is None:
-            params = {"lang": "ru"}
+            params = {"lang": "uk"}
 
         self._last_response = r = self._session.request(
             method,
@@ -128,9 +128,16 @@ class TaxerAPI:
         Get list of the accounts
         """
         return self.session.request(
-            "post",
+            "get",
             "finances/account/load",
-            {"userId": self.session._uid, "pageNumber": 1, "filters": {}},
+            {},
+            params={
+                "params": json.dumps({
+                    "userId": self.session._uid,
+                    "pageNumber": 1,
+                    "filters": {"filterArchived": 0},
+                })
+            },
         )
 
     def get_operations(self, date_to):
@@ -146,7 +153,8 @@ class TaxerAPI:
 
     def convert_iban_to_taxer_acc(self, account_number, response="for_operation"):
         if getattr(self, "_accounts_cache", None) is None:
-            self._accounts_cache = self.get_accounts()["accounts"]
+            accounts_res = self.get_accounts()
+            self._accounts_cache = accounts_res["accounts"]
 
         for acc in self._accounts_cache:
             if account_number == acc["num"]:
