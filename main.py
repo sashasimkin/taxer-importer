@@ -14,7 +14,7 @@ from source.monobank import Monobank
 # Let's see whether it will change on DST
 # Also, find out what will gonna happen to taxer date submission
 # ---------------
-# Seems like it's Kiev timezone and works allright on my machine
+# Seems like it's Kyiv timezone and works allright on my machine
 # But packing to docker or doing web-version I should prolly relate on
 # User's timezone or make him specify it explicitly
 

@@ -176,16 +176,22 @@ class TaxerAPI:
         type_,
         time: datetime,
         data: dict,
+        # Whether to pay taxes for the exchange operations
+        exchange_taxable=False,
         comment=None,
     ):
         assert type_ in {"FlowIncome", "CurrencyExchange"}, "Unsuported operation :("
+
+        finance_type = "custom"
+        if type_ == "CurrencyExchange" and not exchange_taxable:
+            finance_type = "tax_free"
 
         local_data = data.copy()
         local_data.update(
             {
                 "id": None,
                 "type": type_,
-                "financeType": "custom",
+                "financeType": finance_type,
                 "contents": [],
                 "timestamp": self.make_timestamp(time),
             }
