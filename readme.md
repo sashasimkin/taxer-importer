@@ -1,10 +1,9 @@
-Tax Importer
+Taxer Importer
 ====
 
 A simple program to get your financial records from bank, exported as csv into https://taxer.ua
 
-Installation
-====
+## Installation
 
 You might want to use virtualenv for installing this, or you can install required packages system-wide.
 
@@ -13,14 +12,13 @@ All in all the steps are dead-simple:
 git clone https://github.com/sashasimkin/taxer-importer.git
 cd taxer-importer/
 python3 -m venv .env
-. .env/bin/activate
+source .env/bin/activate
 pip3 install -r requirements.txt
 ```
 
-Prerequisites & configuration
-====
+## Prerequisites & configuration
 
-**You must have all your bank accounts used in statement added in taxer.ua in order for script to work.**
+**You must have all your bank accounts used in statement added in taxer.ua in order for the script to work.**
 
 You also need to do a few things:
 
@@ -35,17 +33,27 @@ I suggest placing them into project directory and name `book-{from}-{to}.csv`. T
 
 ### Specify credentials
 
-You can pass them either as `-e EMAIL` and `-p PASSWORD` on command line, each time the script is running, but I suggest placing them in a file name `.taxer-credentials` in a form `email:password`.
+You can pass the credentials  as `-e EMAIL` and `-p PASSWORD` on command line, on each invokation, but I suggest placing them in a file name `.taxer-credentials` in a form `email:password`.
 
 This will will be read by the program automatically, the file  will also be ignored by git if you ever want to contribute to this project :wink: :wink:
 
-Usage
-====
+## Usage
 
-When you fulfilled all the prerequisites and configurations - running the script is a bliss:
+When you fulfilled all the prerequisites and configurations - run the script in dry run mode to confirm format is correct:
+
+```bash
+python3 mail.py {STATEMENT_FILE.csv} --dry-run
+```
+
+The run it regularly to import all your operaitons.
 
 ```bash
 python3 mail.py {STATEMENT_FILE.csv}
 ```
 
 Then you watch some output, and don't forget to compare your bank records in bank and taxer, just to be sure, you don't horsin' around taxation.
+
+## Notes
+
+The script imports currency exchange operations as non-taxable income. You might need to check if that's okay with your tax office subsidiary.
+
