@@ -245,5 +245,6 @@ class TaxerAPI:
             "outgoAccount": self.convert_iban_to_taxer_acc(account_from),
             "incomeAccount": self.convert_iban_to_taxer_acc(account_to),
             "incomeCurrency": rate,
+            "calcExchangeDiff": False,
         }
         return self.add_operation("CurrencyExchange", time, operation)
